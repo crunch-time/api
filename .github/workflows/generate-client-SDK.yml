@@ -1,0 +1,62 @@
+
+name: Generate client SDK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Generate client SDK
+      run: |
+        java -jar swagger-codegen-cli-3.0.21.jar generate \
+          -i specs/external-api.json \
+          -i specs/internal-api.json \
+          -o client_sdk \
+          --lang javascript
+    
+    - name: Upload the SDK for next job
+      uses: actions/upload-artifact@v2
+      with:
+        name: client_sdk
+        path: client_sdk
+        
+  publish-to-GitHub-Packages:
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          always-auth: true
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: "@GauchoTools"
+          
+      - uses: actions/download-artifact@v2
+        with:
+          name: client_sdk
+          path: client_sdk
+
+      - name: Fix erroneous code from generator
+        run: find client_sdk/src/model -type f -name "*.js" -print0 | xargs -0 sed -i 's/\.call(/\.constructFromObject(/g'
+
+      - name: Push to private package registry 
+        run: |
+          cd client_sdk
+          sudo apt-get install moreutils
+          jq -s '.[0] += .[1] | .[0]' package.json ../templates/package_metadata.json | sponge package.json
+          cat package.json
+
+          npm install
+          npm test
+          npm build
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

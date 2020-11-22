@@ -1,0 +1,16 @@
+{
+    "name": "@gauchotools/swagger_specs",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/GauchoTools/swagger_specs.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/",
+        "always-auth": true,
+        "scope": "@gauchotools/swagger_specs"
+    },
+    "bugs": {
+        "url": "https://github.com/GauchoTools/swagger_specs/issues"
+    },
+    "homepage": "https://github.com/GauchoTools/swagger_specs#readme"
+}

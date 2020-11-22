@@ -1,0 +1,21 @@
+{
+    "name": "@gauchotools/swagger_specs",
+    "version": "1.0.5",
+    "description": "Swagger definition files used to generate client SDKs and server stubs.",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/GauchoTools/swagger_specs.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/",
+        "always-auth": true,
+        "scope": "@gauchotools/swagger_specs"
+    },
+    "author": "Jason Freeberg",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/GauchoTools/swagger_specs/issues"
+    },
+    "homepage": "https://github.com/GauchoTools/swagger_specs#readme"
+  }
+  

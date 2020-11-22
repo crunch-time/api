@@ -1,2 +1,3 @@
-# api
-Swagger specs for the crunch time app
+# API Specs
+
+Swagger specs and build pipelines for the CrunchTime app.

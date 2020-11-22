@@ -1,0 +1,172 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "GauchoCourses",
+        "version": "1.0.5",
+        "description": "A definition of the models and API paths used for the GauchoCourses application."
+    },
+    "paths": {
+        "/schedules": {
+            "get": {
+                "operationId": "getSchedule",
+                "summary": "Represents a list of schedules for a user",
+                "parameters": [
+                    {
+                       "name": "userEmail",
+                       "description": "Email of the user",
+                       "in": "query",
+                       "required": true,
+                       "schema": {
+                            "type": "string",
+                            "description": "Email in format user@domain.tld",
+                            "example": "joe@example.com"
+                       }
+                    }
+                ],
+                "responses": {
+                    "200": { 
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "component-definitions.json#/components/schemas/Schedule"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "component-definitions.json#/components/responses/Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "saveSchedule",
+                "summary": "Saves a given schedule",
+                "requestBody": {
+                    "description": "Schedule object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "component-definitions.json#/components/schemas/Schedule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "component-definitions.json#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/schedules/delete": {
+            "post": {
+                "operationId": "deleteSchedule",
+                "summary": "Deletes a given schedule",
+                "requestBody": {
+                    "description": "Schedule object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "component-definitions.json#/components/schemas/Schedule"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "component-definitions.json#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/schedules/generate": {
+            "post": {
+                "operationId": "generateSchedule",
+                "summary": "Generates a list of schedules from given parameters paginated",
+                "requestBody": {
+                    "description": "Parameters to generate schedules from",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "classSections": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "component-definitions.json#/components/schemas/ClassSection"
+                                        }
+                                    },
+                                    "lastScheduleIndex": {
+                                        "type": "number",
+                                        "description": "Equivalent pageNumber or list offset"
+                                    },
+                                    "pageSize": {
+                                        "type": "number",
+                                        "description": "Number of schedules to return per request"
+                                    },
+                                    "customEvents": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "component-definitions.json#/components/schemas/CustomEvent"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "component-definitions.json#/components/responses/Unauthorized"
+                    }
+                }
+            }
+        },
+        "/user": {
+            "summary": "Get currently logged in user token",
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "description": "user Authorization token, if not logged in, returns null"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

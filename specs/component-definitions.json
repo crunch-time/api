@@ -1,0 +1,495 @@
+{
+    "components": {
+        "schemas": {
+            "Days": {
+                "type": "string",
+                "description": "The format used to show days of the week in the TimeLocations schema.",
+                "enum": [
+                    "MONDAY",
+                    "TUESDAY",
+                    "WEDNESDAY",
+                    "THURSDAY",
+                    "FRIDAY",
+                    "SATURDAY",
+                    "SUNDAY"
+                ]
+            },
+            "TimeLocation": {
+                "type": "object",
+                "description": "Defines the days, start time, and end time for a weekly recurring event.",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "Auto-generated ID of the persisted object."
+                    },
+                    "fullDays": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Days"
+                        }
+                    },
+                    "beginTime": {
+                        "type": "string",
+                        "description": "The begin time for the event. 24-hour format: HH:mm.",
+                        "example": "08:55",
+                        "pattern": "^([01][0-9]|2[0-3]):([0-5][0-9])$"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "description": "The end time for the event. 24-hour format: HH:mm.",
+                        "example": "15:55",
+                        "pattern": "^([01][0-9]|2[0-3]):([0-5][0-9])$"
+                    },
+                    "room": {
+                        "type": "string",
+                        "description": "The room where the course is offered",
+                        "example": "Room 121"
+                    },
+                    "building": {
+                        "type": "string",
+                        "description": "The building for the room.",
+                        "example": "South Hall"
+                    },
+                    "roomCapacity": {
+                        "type": "integer"
+                    },
+                    "additionalProperties": {
+                        "type": "object"
+                    }
+                }
+            },
+            "Event": {
+                "description": "Defines a weekly recurring event.",
+                "type": "object",
+                "required": [
+                    "timeLocations"
+                ],
+                "properties": {
+                    "timeLocations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TimeLocation"
+                        }
+                    }
+                }
+            },
+            "ClassSection": {
+                "description": "A congregation of students and teachers for a course. A course can have many class sections.",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Event"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "enrollCode": {
+                                "type": "string"
+                            },
+                            "classClosed": {
+                                "type": "boolean",
+                                "description": "Indicates if this class section is closed."
+                            },
+                            "maxEnroll": {
+                                "type": "integer",
+                                "description": "The maximum number of students allowed to enroll in this class section."
+                            },
+                            "enrolledTotal": {
+                                "type": "integer",
+                                "description": "The current number of students enrolled in this class section."
+                            },
+                            "isLecture": {
+                                "type": "boolean",
+                                "description": "Indicates if this class section is a lecture."
+                            },
+                            "section": {
+                                "description": "Section number of the course",
+                                "type": "string"
+                            },
+                            "session": {
+                                "description": "Session number only for summer term",
+                                "type": "string"
+                            },
+                            "courseCancelled": {
+                                "type": "string",
+                                "description": "The current status of the course"
+                            },
+                            "gradingOptionCode": {
+                                "type": "string",
+                                "description": "The default grading option for this class section"
+                            },
+                            "departmentApprovalRequired": {
+                                "type": "boolean",
+                                "description": "Indicates whether department approval is required to enroll"
+                            },
+                            "instructorApprovalRequired": {
+                                "type": "boolean",
+                                "description": "Indicates whether instructor approval is required to enroll"
+                            },
+                            "restrictionLevel": {
+                                "description": "Is there restriction on the level of the course",
+                                "type": "string"
+                            },
+                            "restrictionMajor": {
+                                "description": "Is there restriction on the major of the student",
+                                "type": "string"
+                            },
+                            "restrictionMajorPass": {
+                                "description": "Is there restriction on the major during certain pass times",
+                                "type": "string"
+                            },
+                            "restrictionMinor": {
+                                "description": "Is there restriction on the minor of the student",
+                                "type": "string"
+                            },
+                            "restrictionMinorPass": {
+                                "description": "Is there restriction on the minor during certain pass times",
+                                "type": "string"
+                            },
+                            "instructors": {
+                                "description": "Instructors for this class section",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Instructor"
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "CustomEvent": {
+                "description": "A user-defined weekly event such as club meetings, work, or sports practice.",
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Event"
+                    },
+                    {
+                        "properties": {
+                            "id": {
+                                "type": "number",
+                                "description": "Unique ID for the custom event."
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "User-specified name of the custom event."
+                            }
+                        }
+                    }
+                ]
+            },
+            "Course": {
+                "description": "A collection of ClassSections and associated metadata.",
+                "properties": {
+                    "term": {
+                        "description": "Academic term with format YYYYT, where T is an integer representing the term. 20201 is the first term of 2020, 20202 is the second term of 2020, etc.",
+                        "type": "string"
+                    },
+                    "courseId": {
+                        "description": "13 character course Id with format SSSSSPPPNNNNUUU , Fist 5 char is course subject, Next 3 char is course prefix then next 3 char is course number and last 2 char is course suffix.\r\nFor example 'ES 1- 16B ' can be broken down in subject 'ES ' prefix '1- ' number ' 16' suffix 'B",
+                        "type": "string"
+                    },
+                    "title": {
+                        "description": "Course Title from curriculum catalog",
+                        "type": "string"
+                    },
+                    "contactHours": {
+                        "format": "double",
+                        "description": "Primary hours for course",
+                        "type": "number"
+                    },
+                    "description": {
+                        "description": "Detail descriptions for the course",
+                        "type": "string"
+                    },
+                    "college": {
+                        "description": "College code approved for the course\r\nplease refer to Student Record Code Lookups API for translations",
+                        "type": "string"
+                    },
+                    "objLevelCode": {
+                        "description": "1 character code, The academic program objective level must be 'G'raduate or 'U'ndergraduate ,\r\n'L' for Undergraduate lower division and 'S' for Undergraduate upper division",
+                        "type": "string"
+                    },
+                    "subjectArea": {
+                        "description": "The subject code to match First 8 Char of CourseId",
+                        "type": "string"
+                    },
+                    "unitsFixed": {
+                        "format": "double",
+                        "description": "Number of fixed units for the course",
+                        "type": "number"
+                    },
+                    "unitsVariableHigh": {
+                        "format": "double",
+                        "description": "The upper bound on the units for variable-unit courses.",
+                        "type": "number"
+                    },
+                    "unitsVariableLow": {
+                        "format": "double",
+                        "description": "The lower bound on the units for variable-unit courses.",
+                        "type": "number"
+                    },
+                    "delayedSectioning": {
+                        "description": "delayed sectioning for the course",
+                        "type": "string"
+                    },
+                    "inProgressCourse": {
+                        "description": "If course is in progress",
+                        "type": "string"
+                    },
+                    "gradingOption": {
+                        "description": "Grading options for the course",
+                        "type": "string"
+                    },
+                    "instructionType": {
+                        "description": "instructions type of the course",
+                        "type": "string"
+                    },
+                    "onLineCourse": {
+                        "description": "If the course is online ?",
+                        "type": "boolean"
+                    },
+                    "deptCode": {
+                        "description": "department code for the course\r\nplease refer look up api for translations",
+                        "type": "string"
+                    },
+                    "generalEducation": {
+                        "description": "List of general education requirements that this course fulfills",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GeneralEducation"
+                        }
+                    },
+                    "classSections": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ClassSection"
+                        }
+                    }
+                }
+            },
+            "Department": {
+                "properties": {
+                    "deptCode": {
+                        "type": "string"
+                    },
+                    "deptCodeTranslationShort": {
+                        "type": "string"
+                    },
+                    "deptTranslation": {
+                        "type": "string"
+                    },
+                    "collegeCode": {
+                        "type": "string"
+                    },
+                    "divisionCode": {
+                        "type": "string"
+                    },
+                    "orgCode": {
+                        "type": "string"
+                    },
+                    "inactive": {
+                        "type": "boolean",
+                        "default": false
+                    }
+                }
+            },
+            "GeneralEducation": {
+                "description": "",
+                "type": "object",
+                "properties": {
+                    "geCode": {
+                        "type": "string",
+                        "description": "The code for the general education requirement.",
+                        "example": "Area F"
+                    },
+                    "geCollege": {
+                        "type": "string",
+                        "description": "The college that the GE requirement is associated with.",
+                        "example": "College of the Arts"
+                    }
+                }
+            },
+            "CourseAndClassIds": {
+                "description": "(Used in the Schedule schema.) A container used to hold the course ID and its corresponding class section ID's",
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "The id of the object"
+                    },
+                    "courseId": {
+                        "type": "number",
+                        "description": "The courseId of the course"
+                    },
+                    "scheduledEnrollCodes": {
+                        "type": "array",
+                        "description": "The list of all enroll codes for this course",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "selectedEnrollCodes": {
+                        "type": "array",
+                        "description": "The list of selected enroll codes",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "ScheduleSortingAttributes": {
+                "description": "Calculated metrics and metadata about the schedule, used for sorting and prioritizing schedules.",
+                "type": "object",
+                "properties": {
+                    "daysWithEvents": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Days"
+                        }
+                    },
+                    "totalMinutesBetweenEvents": {
+                        "type": "number",
+                        "description": "The total minutes between the events in the schedule. Used to compare 'gaps' between events."
+                    },
+                    "totalMinutesFromMidnight": {
+                        "type": "number",
+                        "description": "The total minutes between midnight and each day's first event."
+                    },
+                    "earliestBeginTime": {
+                        "type": "string",
+                        "description": "The earliest start time of all events in the schedule."
+                    },
+                    "latestEndTime": {
+                        "type": "string",
+                        "description": "The latest end time of all events in the schedule."
+                    }
+                }
+            },
+            "Instructor": {
+                "description": "The instructor for a ClassSection",
+                "properties": {
+                    "instructor": {
+                        "type": "string",
+                        "description": "The name of the instructor",
+                        "example": "Professor JJ Abrams"
+                    },
+                    "functionCode": {
+                        "type": "string",
+                        "description": "The instructor's role, such as 'Lecturer', 'Assistant'. Can be empty string.",
+                        "example": "Lecturer"
+                    }
+                }
+            },
+            "Schedule": {
+                "description": "A collection of ClassSections, CustomEvents, and calculated metrics about the schedule.",
+                "properties": {
+                    "id": {
+                        "type": "number",
+                        "description": "The unique ID of the schedule."
+                    },
+                    "term": {
+                        "type": "string",
+                        "description": "The academic session that the schedule's events belong to."
+                    },
+                    "name": {
+                        "type": "object",
+                        "description": "The user specified name of the schedule."
+                    },
+                    "userEmail": {
+                        "type": "string",
+                        "description": "The email of the user who owns this schedule"
+                    },
+                    "totalUnits": {
+                        "type": "number",
+                        "description": "The total units of the courses used in the schedule."
+                    },
+                    "conflicting": {
+                        "type": "boolean",
+                        "description": "Indicates if the schedule has conflicting events."
+                    },
+                    "scheduledCourses": {
+                        "type": "array",
+                        "description": "A list of the course and class ID's that are used in the schedule.",
+                        "items": {
+                            "$ref": "#/components/schemas/CourseAndClassIds"
+                        }
+                    },
+                    "selectedCourses": {
+                        "type": "array",
+                        "description": "A list of the courses and class ID's that are not used in this schedule, but were used as part of the scheduling process.",
+                        "items": {
+                            "$ref": "#/components/schemas/CourseAndClassIds"
+                        }
+                    },
+                    "customEvents": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CustomEvent"
+                        }
+                    },
+                    "sortingAttributes": {
+                        "type": "object",
+                        "items": {
+                            "$ref": "#/components/schemas/ScheduleSortingAttributes"
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Short description of the error"
+                    },
+                    "details": {
+                        "type": "string",
+                        "description": "More details about the error"
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "pageNumber": {
+                "name": "pageNumber",
+                "in": "query",
+                "schema": {
+                    "type": "integer",
+                    "description": "Number of pages to skip relative to page size",
+                    "minimum": 0
+                }
+            },
+            "pageSize": {
+                "name": "pageSize",
+                "in": "query",
+                "schema": {
+                    "type": "integer",
+                    "description": "Number of items per page",
+                    "minimum": 0
+                }
+            }
+        },
+        "responses": {
+            "BadRequest": {
+                "description": "Bad Request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "Unauthorized": {
+                "description": "Unauthorized",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
