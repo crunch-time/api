@@ -1,5 +1,5 @@
 {
-    "name": "@crunchtime/api",
+    "name": "@crunch-time/api",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/crunch-time/api.git"
