@@ -1,16 +1,16 @@
 {
-    "name": "@gauchotools/swagger_specs",
+    "name": "@crunchtime/api",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/GauchoTools/swagger_specs.git"
+        "url": "git+https://github.com/crunch-time/api.git"
     },
     "publishConfig": {
         "registry": "https://npm.pkg.github.com/",
         "always-auth": true,
-        "scope": "@gauchotools/swagger_specs"
+        "scope": "@crunchtime/api"
     },
     "bugs": {
-        "url": "https://github.com/GauchoTools/swagger_specs/issues"
+        "url": "https://github.com/crunch-time/api/issues"
     },
-    "homepage": "https://github.com/GauchoTools/swagger_specs#readme"
+    "homepage": "https://crunch-time.github.io/"
 }
