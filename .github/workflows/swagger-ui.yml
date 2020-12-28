@@ -18,7 +18,10 @@ jobs:
         with:
           output: swagger-ui
           spec-file: specs/external-api.json
-
+          
+      - name: Copy file with model definitions
+        run: copy specs/component-definitions.json swagger-ui
+      
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
