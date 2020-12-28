@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "title": "GauchoCourses",
-        "version": "1.0.5",
-        "description": "A definition of the models and API paths used for the GauchoCourses application."
+        "title": "CrunchTime",
+        "version": "1.0.6",
+        "description": "A definition of the models and API paths used for the CrunchTime application."
     },
     "servers": [
         {
