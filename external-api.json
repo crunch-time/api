@@ -1,0 +1,268 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "GauchoCourses",
+        "version": "1.0.5",
+        "description": "A definition of the models and API paths used for the GauchoCourses application."
+    },
+    "servers": [
+        {
+            "url": "https://api.server.test/v1"
+        }
+    ],
+    "paths": {
+        "/terms": {
+            "get": {
+                "summary": "Represents a list of academic terms",
+                "description": "This resource represents a list of academic terms which can be filtered by date",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "term": {
+                                            "type": "string",
+                                            "description": "Term with integer format YYYYT, YYYY = year T= term",
+                                            "example": "20204"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Name of the term",
+                                            "example": "Fall 2020"
+                                        }
+                                      }
+                                  }
+                              }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/departments": {
+            "get": {
+                "summary": "Represents a list of active departments",
+                "description": "Represents a list of active departments with corresponding department codes and translations",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                    "$ref": "component-definitions.json#/components/schemas/Department"
+                                  }
+                              }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/general-education": {
+            "get": {
+                "summary": "Represents list of all general education requirements by college",
+                "description": "This resource represents a list of all general education requirements by their requirement code, college code and degree type",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "component-definitions.json#/components/schemas/GeneralEducation"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/courses/{term}": {
+            "get": {
+                "summary": "Represents a list of courses for the term",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "description": "Find courses during the term",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string",
+                            "description": "Term with format YYYYT"
+                        }
+                    },
+                    {
+                        "name": "courseId",
+                        "description": "Find class with courseId",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "description": "13 character course Id with format SSSSSPPPNNNNUUU , Fist 5 char is course subject, Next 3 char is course prefix then next 3 char is course number and last 2 char is course suffix.\r\nFor example 'ES 1- 16B ' can be broken down in subject 'ES ' prefix '1- ' number ' 16' suffix 'B",
+                            "type": "string",
+                            "example": "ES116B"
+                        }
+                    },
+                    {
+                        "name": "enrollCode",
+                        "description": "Find class with enrollCode",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "description": "EnrollCode an unique number assigned to a curriculum, Enroll code should be 5 chars",
+                            "type": "integer",
+                            "example": "43513"
+                        }
+                    },
+                    {
+                        "$ref": "component-definitions.json#/components/parameters/pageNumber"
+                    },
+                    {
+                        "$ref": "component-definitions.json#/components/parameters/pageSize"
+                    }
+                ],
+                "responses": {
+                    "200": { 
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "component-definitions.json#/components/schemas/Course"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    }
+                }
+            }
+        },
+        "/courses/{term}/search": {
+            "get":{
+                "summary": "Search courses in the supplied term",
+                "parameters": [
+                    {
+                        "name": "term",
+                        "description": "Find courses during the term",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string",
+                            "description": "Term with format YYYYT"
+                        }
+                    },
+                    {
+                        "name": "deptCode",
+                        "description": "Find courses with deptCode",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "description": "The department code to match",
+                            "type": "string",
+                            "example": "MATH"
+                        }
+                    },
+                    {
+                        "name": "minUnits",
+                        "description": "Find courses with minimum units",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "description": "Minimum Unit",
+                            "type": "string",
+                            "example": "0.5",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "name": "maxUnits",
+                        "description": "Find courses with maximum units",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "description": "Maximum Unit",
+                            "type": "string",
+                            "example": "5"
+                        }
+                    },
+                    {
+                        "name": "objLevelCode",
+                        "description": "Find courses by class division",
+                        "in": "query",
+                        "schema": {
+                            "description": " 1 character code 'G'raduate or 'U'ndergraduate, 'L' for Undergraduate lower division and 'S' for Undergraduate upper division",
+                            "type": "string",
+                            "example": "U",
+                            "enum": ["G", "U", "L", "S"]
+                        }
+                    },
+                    {
+                        "name": "area",
+                        "description": "Find courses from an area",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "description": "The code for the general education requirement.",
+                            "example": "A1"
+                        }
+                    },
+                    {
+                        "name": "openClassSections",
+                        "description": "Find class by open sections",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "description": "Whether class has open sections",
+                            "example": "A1"
+                        }
+                    },
+                    {
+                        "$ref": "component-definitions.json#/components/parameters/pageNumber"
+                    },
+                    {
+                        "$ref": "component-definitions.json#/components/parameters/pageSize"
+                    }
+                ],
+                "responses": {
+                    "200": { 
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "component-definitions.json#/components/schemas/Course"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "component-definitions.json#/components/responses/BadRequest"
+                    }
+                }
+            }
+        }
+    }
+}
