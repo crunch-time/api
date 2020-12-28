@@ -264,5 +264,33 @@
                 }
             }
         }
+    },
+    "components": {
+      "schemas": {
+        "Days": { 
+          "$ref": "component-definitions.json#/components/schemas/Days"
+        },
+        "TimeLocations": {
+          "$ref": "component-definitions.json#/components/schemas/TimeLocations"
+        },
+        "Event": {
+          "$ref": "component-definitions.json#/components/schemas/Event"
+        },
+        "ClassSection": {
+          "$ref": "component-definitions.json#/components/schemas/ClassSection"
+        },
+        "Course": {
+          "$ref": "component-definitions.json#/components/schemas/Course"
+        },
+        "Department": {
+          "$ref": "component-definitions.json#/components/schemas/Department"
+        },
+        "GeneralEducation": {
+          "$ref": "component-definitions.json#/components/schemas/GeneralEducation"
+        },
+        "Instructor": {
+          "$ref": "component-definitions.json#/components/schemas/Instructor"
+        }
+      }
     }
 }
