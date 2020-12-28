@@ -20,7 +20,7 @@ jobs:
           spec-file: specs/external-api.json
           
       - name: Copy file with model definitions
-        run: cp specs/component-definitions.json swagger-ui
+        run: cp specs/component-definitions.json swagger-ui/component-definitions.json
       
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
