@@ -270,8 +270,8 @@
         "Days": { 
           "$ref": "component-definitions.json#/components/schemas/Days"
         },
-        "TimeLocations": {
-          "$ref": "component-definitions.json#/components/schemas/TimeLocations"
+        "TimeLocation": {
+          "$ref": "component-definitions.json#/components/schemas/TimeLocation"
         },
         "Event": {
           "$ref": "component-definitions.json#/components/schemas/Event"
