@@ -1,12 +1,12 @@
 name: Generate Swagger UI docs and publish them to GitHub Pages
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
-  build:
+  publish-docs:
     runs-on: ubuntu-latest
 
     steps:
